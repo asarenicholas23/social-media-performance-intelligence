@@ -161,10 +161,19 @@ with st.sidebar:
     st.markdown("## 📊 SM Intelligence")
     st.markdown("---")
 
-    uploaded = st.file_uploader("Upload metrics CSV", type=["csv"])
-    df = load_data(uploaded if uploaded else "data/processed/metrics_SM_data.csv")
-    if uploaded:
-        st.success(f"✓ {len(df)} posts loaded")
+   uploaded = st.file_uploader("Upload metrics CSV", type=["csv"])
+
+if uploaded:
+    df = load_data(uploaded)
+    st.success(f"✓ {len(df)} posts loaded")
+else:
+    import os
+    local_path = "data/processed/metrics_SM_data.csv"
+    if os.path.exists(local_path):
+        df = load_data(local_path)
+    else:
+        st.info("Upload a metrics CSV to get started.")
+        st.stop()
 
     st.markdown("---")
     st.markdown("### Filters")
