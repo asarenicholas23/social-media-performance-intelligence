@@ -158,22 +158,13 @@ def load_data(source):
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 📊 SM Intelligence")
+    st.markdown("## \U0001f4ca SM Intelligence")
     st.markdown("---")
 
-   uploaded = st.file_uploader("Upload metrics CSV", type=["csv"])
-
-if uploaded:
-    df = load_data(uploaded)
-    st.success(f"✓ {len(df)} posts loaded")
-else:
-    import os
-    local_path = "data/processed/metrics_SM_data.csv"
-    if os.path.exists(local_path):
-        df = load_data(local_path)
-    else:
-        st.info("Upload a metrics CSV to get started.")
-        st.stop()
+    uploaded = st.file_uploader("Upload metrics CSV", type=["csv"])
+    df = load_data(uploaded if uploaded else "data/processed/metrics_SM_data.csv")
+    if uploaded:
+        st.success(f"\u2713 {len(df)} posts loaded")
 
     st.markdown("---")
     st.markdown("### Filters")
@@ -186,8 +177,12 @@ else:
 
     date_min = df["date_posted"].min().date()
     date_max = df["date_posted"].max().date()
-    sel_dates = st.date_input("Date Range", value=(date_min, date_max),
-                               min_value=date_min, max_value=date_max)
+    sel_dates = st.date_input(
+        "Date Range",
+        value=(date_min, date_max),
+        min_value=date_min,
+        max_value=date_max,
+    )
 
     st.markdown("---")
     st.caption("Social Media Performance Intelligence · v1.0")
